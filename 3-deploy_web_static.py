@@ -9,7 +9,7 @@ from fabric.api import local, env, run, put, runs_once, cd, task
 from datetime import datetime
 from os.path import getsize
 
-env.hosts = ["18.234.145.137", "54.196.49.246"]
+env.hosts = ["18.207.234.225", "52.91.116.161"]
 env.user = "ubuntu"
 env.key_filename = "~/.ssh/id_rsa"
 
