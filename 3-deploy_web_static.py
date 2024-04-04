@@ -7,8 +7,10 @@ from fabric.api import env, local, put, run, sudo
 from datetime import datetime
 from os.path import exists, isdir
 
+
 # Define remote hosts
-env.hosts = ['52.91.116.161', '18.207.234.225']
+env.hosts = ["52.91.116.161", "18.207.234.225"]
+
 
 def do_pack():
     """
@@ -26,6 +28,7 @@ def do_pack():
         print("Failed to pack archive:", e)
         return None
 
+
 def do_deploy(archive_path):
     """
     Distributes an archive to the web servers
@@ -39,19 +42,20 @@ def do_deploy(archive_path):
     try:
         file_name = archive_path.split("/")[-1]
         no_ext = file_name.split(".")[0]
-        remote_path = "/data/web_static/releases/"
-        put(archive_path, '/tmp/')
-        sudo('mkdir -p {}{}/'.format(remote_path, no_ext))
-        sudo('tar -xzf /tmp/{} -C {}{}/'.format(file_name, remote_path, no_ext))
-        sudo('rm /tmp/{}'.format(file_name))
-        sudo('mv {0}{1}/web_static/* {0}{1}/'.format(remote_path, no_ext))
-        sudo('rm -rf {}{}/web_static'.format(remote_path, no_ext))
-        sudo('rm -rf /data/web_static/current')
-        sudo('ln -s {}{}/ /data/web_static/current'.format(remote_path, no_ext))
+        path = "/data/web_static/releases/"
+        put(archive_path, "/tmp/")
+        sudo("mkdir -p {}{}/".format(path, no_ext))
+        sudo("tar -xzf /tmp/{} -C {}{}/".format(file_name, path, no_ext))
+        sudo("rm /tmp/{}".format(file_name))
+        sudo("mv {0}{1}/web_static/* {0}{1}/".format(path, no_ext))
+        sudo("rm -rf {}{}/web_static".format(path, no_ext))
+        sudo("rm -rf /data/web_static/current")
+        sudo("ln -s {}{}/ /data/web_static/current".format(path, no_ext))
         return True
     except Exception as e:
         print("Failed to deploy:", e)
         return False
+
 
 def deploy():
     """
@@ -62,4 +66,3 @@ def deploy():
     if archive_path:
         return do_deploy(archive_path)
     return False
-

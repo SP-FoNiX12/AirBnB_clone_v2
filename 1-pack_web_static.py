@@ -5,6 +5,7 @@ deployed fabric
 from datetime import datetime
 from fabric.api import local, task
 
+
 @task
 def do_pack():
     """ A script that generates archive the contents of web_static folder"""
