@@ -5,7 +5,7 @@ from the contents of the web_static folder of
 AirBnB Clone repo
 """
 from os.path import basename, exists, splitext
-from fabric.api import local, env, run, put, cd, task
+from fabric.api import local, env, run, put, cd, task, sudo
 from datetime import datetime
 from os.path import getsize
 
@@ -51,25 +51,26 @@ def do_deploy(archive_path):
         archive_path = basename(archive_path)
         file, _ = splitext(archive_path)
         with cd(target):
-            if test(run("if [ -d {} ]; then rm -rf {}; fi"
+            if test(sudo("if [ -d {} ]; then rm -rf {}; fi"
                         .format(file, file))):
                 return False
-            if test(run("mkdir -p {}".format(file))):
+            if test(sudo("mkdir -p {}".format(file))):
                 return False
-            if test(run("tar -xzf /tmp/{} -C {}"
+            if test(sudo("tar -xzf /tmp/{} -C {}"
                         .format(archive_path, file))):
                 return False
-            if test(run("mv {}/web_static/* {} && rm -rf {}/web_static"
+            if test(sudo("mv {}/web_static/* {} && rm -rf {}/web_static"
                         .format(file, file, file))):
                 return False
-        if test(run("rm /tmp/{}".format(archive_path))):
+        if test(sudo("rm /tmp/{}".format(archive_path))):
             return False
-        if test(run("rm -rf /data/web_static/current")):
+        if test(sudo("rm -rf /data/web_static/current")):
             return False
-        if test(run("ln -s {}{}/ /data/web_static/current"
+        if test(sudo("ln -s {}{}/ /data/web_static/current"
                     .format(target, file))):
             return False
         print("New version deployed!")
     except Exception:
         return False
     return True
+
